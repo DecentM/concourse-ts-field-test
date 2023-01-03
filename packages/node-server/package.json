@@ -1,14 +1,19 @@
 {
-  "name": "node-server",
+  "name": "@decentm/node-server",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc"
+    "build": "rimraf dist && tsc",
+    "ci": "node ../ci/dist/cli.js compile -i ./ci/**/*.ts -o .ci"
   },
   "devDependencies": {
+    "@types/node": "^18.11.18",
     "rimraf": "^3.0.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@decentm/ci": "^1.0.0"
   }
 }
