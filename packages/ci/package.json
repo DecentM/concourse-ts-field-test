@@ -1,13 +1,16 @@
 {
-  "name": "ci",
+  "name": "@decentm/ci",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "bin": {
+    "cli": "dist/cli.js"
+  },
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && tsc"
   },
   "dependencies": {
-    "@decentm/concourse-ts": "^0.0.8"
+    "@decentm/concourse-ts": "^0.1.4"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
