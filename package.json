@@ -1,9 +1,12 @@
 {
-  "name": "concourse-ts-field-test",
+  "name": "@decentm/concourse-ts-field-test",
   "version": "1.0.0",
   "main": "index.js",
   "author": "DecentM <decentm@decentm.com>",
   "private": true,
+  "scripts": {
+    "build": "lerna run build"
+  },
   "workspaces": [
     "packages/*"
   ],
