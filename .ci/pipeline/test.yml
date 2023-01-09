@@ -1,0 +1,101 @@
+jobs:
+  - name: test-job
+    plan:
+      - attempts: 3
+        timeout: 6h
+        task: oci-build
+        config:
+          image_resource:
+            type: registry-image
+            source:
+              repository: concourse/oci-build-task
+          platform: linux
+          run:
+            path: build
+          inputs:
+            - name: concourse-ts-field-test
+              path: .
+          outputs:
+            - name: image
+        privileged: true
+      - attempts: 3
+        timeout: 6h
+        get: my_repo
+        params: {}
+        trigger: true
+        version: latest
+    build_log_retention:
+      builds: 10
+      minimum_succeeded_builds: 7
+    disable_manual_trigger: false
+    interruptible: true
+    max_in_flight: 3
+    on_abort:
+      attempts: 3
+      timeout: 6h
+      do:
+        - attempts: 3
+          timeout: 6h
+          put: discord-ping
+          params:
+            text: |-
+              Pipeline $BUILD_PIPELINE_NAME - manually aborted!
+              http://ci.corpity-corp.com/builds/$BUILD_ID
+    on_error:
+      attempts: 3
+      timeout: 6h
+      do:
+        - attempts: 3
+          timeout: 6h
+          put: discord-ping
+          params:
+            text: |-
+              Pipeline $BUILD_PIPELINE_NAME - errored!
+              http://ci.corpity-corp.com/builds/$BUILD_ID
+    on_failure:
+      attempts: 3
+      timeout: 6h
+      do:
+        - attempts: 3
+          timeout: 6h
+          put: discord-ping
+          params:
+            text: |-
+              Pipeline $BUILD_PIPELINE_NAME - failure!
+              http://ci.corpity-corp.com/builds/$BUILD_ID
+    on_success:
+      attempts: 3
+      timeout: 6h
+      do:
+        - attempts: 3
+          timeout: 6h
+          put: discord-ping
+          params:
+            text: |-
+              Pipeline $BUILD_PIPELINE_NAME - success!
+              http://ci.corpity-corp.com/builds/$BUILD_ID
+    public: false
+    serial: false
+resource_types:
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: latest
+    check_every: 24h
+    privileged: false
+  - name: github
+    type: git
+    check_every: 24h
+    privileged: false
+resources:
+  - name: discord-ping
+    type: slack-notification
+    source:
+      url: ((discord-webhook-url))
+    check_every: 1h
+  - name: my_repo
+    type: github
+    source:
+      uri: https://github.com/DecentM/concourse-ts-field-test
+    check_every: 1m

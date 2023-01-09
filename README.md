@@ -1,7 +1,8 @@
-# concourse-examples
+<h1 align="center">
+  concourse-ts-field-test
+</h1>
 
-This library was generated with [Nx](https://nx.dev).
+<div align="center">
 
-## Building
-
-Run `nx build concourse-examples` to build the library.
+  A boilerplate project I use to create requirements for concourse-ts.
+</div>
