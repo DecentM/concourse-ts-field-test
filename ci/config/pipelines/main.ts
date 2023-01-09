@@ -4,7 +4,7 @@ import { Secrets } from "../../secrets";
 export default () => {
   return new Pipeline("test", (pipeline) => {
     const git = new Presets.Resource.GitRepo("my_repo", {
-      uri: "https://github.com/DecentM/concourse-ts-field-test",
+      uri: "https://github.com/DecentM/concourse-ts-field-test.git",
     });
 
     const discord = new Presets.Resource.SlackNotification("discord-ping", {
@@ -13,6 +13,8 @@ export default () => {
 
     pipeline.add_job(
       new Job("test-job", (testJob) => {
+        testJob.add_step(git.as_get_step({}));
+
         testJob.add_step(
           new Task("oci-build", (ociTask) => {
             ociTask.platform = "linux";
@@ -41,7 +43,6 @@ export default () => {
           })
         );
 
-        testJob.add_step(git.as_get_step({}));
         discord.install_as_handlers(testJob);
       })
     );

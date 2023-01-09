@@ -14,10 +14,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@decentm/concourse-ts@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@decentm/concourse-ts/-/concourse-ts-0.2.4.tgz#63f4bec5f69de8573d8a398ab792e38a8dbe45b2"
-  integrity sha512-allrGdVPCuU+4IV8nDcvPzwZw+vDHl9BtXtpwBWiN2K+qky44+fM02tsFxWHurCvVoF1Vkl/8tcwaezrXS1fXA==
+"@decentm/concourse-ts@^0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@decentm/concourse-ts/-/concourse-ts-0.2.8.tgz#4c84355c41e3dd7c8de22c5cbe28c02133da33a0"
+  integrity sha512-2dDTsFGFXo/QT77F98XrsW1IiZUBlcvrXuSl/6LzICQXDsjztLje1rY3YnNQS+Bwts8j40i7AVYrjKl51pNYBg==
   dependencies:
     fast-glob "^3.2.12"
     ink "^3.2.0"

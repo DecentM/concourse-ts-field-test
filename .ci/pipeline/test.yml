@@ -3,6 +3,12 @@ jobs:
     plan:
       - attempts: 3
         timeout: 6h
+        get: my_repo
+        params: {}
+        trigger: true
+        version: latest
+      - attempts: 3
+        timeout: 6h
         task: oci-build
         config:
           image_resource:
@@ -18,12 +24,6 @@ jobs:
           outputs:
             - name: image
         privileged: true
-      - attempts: 3
-        timeout: 6h
-        get: my_repo
-        params: {}
-        trigger: true
-        version: latest
     build_log_retention:
       builds: 10
       minimum_succeeded_builds: 7
@@ -84,7 +84,7 @@ resource_types:
       tag: latest
     check_every: 24h
     privileged: false
-  - name: github
+  - name: my_repo_type
     type: git
     check_every: 24h
     privileged: false
@@ -95,7 +95,7 @@ resources:
       url: ((discord-webhook-url))
     check_every: 1h
   - name: my_repo
-    type: github
+    type: git
     source:
-      uri: https://github.com/DecentM/concourse-ts-field-test
+      uri: https://github.com/DecentM/concourse-ts-field-test.git
     check_every: 1m
