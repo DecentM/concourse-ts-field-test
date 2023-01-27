@@ -1,101 +1,56 @@
 jobs:
   - name: test-job
     plan:
-      - attempts: 3
-        timeout: 6h
+      - timeout: 6h
         get: my_repo
         params: {}
         trigger: true
         version: latest
-      - attempts: 3
-        timeout: 6h
+      - timeout: 6h
         task: oci-build
-        config:
-          image_resource:
-            type: registry-image
-            source:
-              repository: concourse/oci-build-task
-          platform: linux
-          run:
-            path: build
-          inputs:
-            - name: concourse-ts-field-test
-              path: .
-          outputs:
-            - name: image
+        file: .ci/task/oci-build.yml
         privileged: true
-    build_log_retention:
-      builds: 10
-      minimum_succeeded_builds: 7
-    disable_manual_trigger: false
-    interruptible: true
-    max_in_flight: 3
-    on_abort:
-      attempts: 3
-      timeout: 6h
-      do:
-        - attempts: 3
-          timeout: 6h
-          put: discord-ping
-          params:
-            text: |-
-              Pipeline $BUILD_PIPELINE_NAME - manually aborted!
-              http://ci.corpity-corp.com/builds/$BUILD_ID
-    on_error:
-      attempts: 3
-      timeout: 6h
-      do:
-        - attempts: 3
-          timeout: 6h
-          put: discord-ping
-          params:
-            text: |-
-              Pipeline $BUILD_PIPELINE_NAME - errored!
-              http://ci.corpity-corp.com/builds/$BUILD_ID
     on_failure:
-      attempts: 3
       timeout: 6h
       do:
-        - attempts: 3
-          timeout: 6h
+        - timeout: 6h
           put: discord-ping
           params:
-            text: |-
-              Pipeline $BUILD_PIPELINE_NAME - failure!
-              http://ci.corpity-corp.com/builds/$BUILD_ID
+            text: Job "$BUILD_JOB_NAME" failed in pipeline "$BUILD_PIPELINE_NAME" -
+              $ATC_EXTERNAL_URL/build/$BUILD_ID
     on_success:
-      attempts: 3
       timeout: 6h
       do:
-        - attempts: 3
-          timeout: 6h
+        - timeout: 6h
           put: discord-ping
           params:
-            text: |-
-              Pipeline $BUILD_PIPELINE_NAME - success!
-              http://ci.corpity-corp.com/builds/$BUILD_ID
+            text: Job "$BUILD_JOB_NAME" succeeded in pipeline "$BUILD_PIPELINE_NAME"!
     public: false
     serial: false
+groups:
+  - name: my-group
+    jobs:
+      - test-job
 resource_types:
-  - name: slack-notification
-    type: docker-image
+  - name: discord-ping_resource_type
+    type: registry-image
     source:
       repository: cfcommunity/slack-notification-resource
       tag: latest
-    check_every: 24h
     privileged: false
-  - name: my_repo_type
-    type: git
-    check_every: 24h
+  - name: my_repo_resource_type
+    type: registry-image
+    source:
+      repository: concourse/git-resource
+      tag: alpine
     privileged: false
 resources:
   - name: discord-ping
-    type: slack-notification
+    type: discord-ping_resource_type
     source:
       url: ((discord-webhook-url))
-    check_every: 1h
   - name: my_repo
-    type: git
+    type: my_repo_resource_type
     source:
       uri: https://github.com/DecentM/concourse-ts-field-test.git
     check_every: 1m

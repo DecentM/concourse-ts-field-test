@@ -18,7 +18,7 @@
     ]
   },
   "devDependencies": {
-    "@decentm/concourse-ts": "^0.2.8",
+    "@decentm/concourse-ts": "^0.5.0",
     "ava": "^5.1.0",
     "c8": "^7.12.0",
     "rimraf": "^3.0.2",
